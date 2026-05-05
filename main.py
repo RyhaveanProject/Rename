@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from aiogram import Bot
-from aiogram.utils.exceptions import FloodControlRetryAfter, MessageNotModified
+from aiogram.utils import exceptions
 
 # Məlumatlar
 API_TOKEN = '8712453996:AAHfzva1GZ9WDIxjhMK_rZoLtvy2j2L99vY'
@@ -16,10 +16,10 @@ bot = Bot(token=API_TOKEN)
 logging.basicConfig(level=logging.INFO)
 
 async def start_typing():
-    print("Bot optimallaşdırılmış rejimdə işə düşdü...")
+    print("Bot yenidən başladılır...")
     while True:
         for font_text in FONTS:
-            # Hər hərfdə yox, hər 4 simvoldan bir yeniləyirik (Axıcılıq üçün)
+            # Axıcılıq üçün hər 4 simvoldan bir yeniləyirik
             step = 4
             for i in range(0, len(font_text) + step, step):
                 current_display = font_text[:i]
@@ -32,23 +32,19 @@ async def start_typing():
                         message_id=MESSAGE_ID,
                         text=current_display
                     )
-                    # 1.0 və ya 1.2 saniyə Telegram limitləri üçün ən stabil vaxtdır
-                    await asyncio.sleep(0.5) 
+                    # Saniyədə 1 edit limitini aşmamaq üçün 1.2-1.5 saniyə gözləmə
+                    await asyncio.sleep(1) 
                     
-                except FloodControlRetryAfter as e:
-                    print(f"Limit: {e.retry_after} saniyə gözlənilir...")
-                    await asyncio.sleep(e.retry_after)
-                except MessageNotModified:
+                except exceptions.RetryAfter as e:
+                    print(f"Limit: {e.timeout} saniyə gözlənilir...")
+                    await asyncio.sleep(e.timeout)
+                except exceptions.MessageNotModified:
                     continue
                 except Exception as e:
-                    print(f"Gözlənilməz xəta: {e}")
-                    await asyncio.sleep(0.5)
+                    print(f"Xəta: {e}")
+                    await asyncio.sleep(1)
 
-            await asyncio.sleep(3) # Mətn bitəndə fasilə
+            await asyncio.sleep(1) # Cümlə bitəndə qısa fasilə
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    try:
-        loop.run_until_complete(start_typing())
-    except KeyboardInterrupt:
-        pass
+    asyncio.run(start_typing())
