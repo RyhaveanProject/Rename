@@ -34,7 +34,7 @@ async def start_typing():
                         caption=current_display
                     )
                     # Saniyədə 1 edit limitini aşmamaq üçün 1.2 saniyə gözləmə
-                    await asyncio.sleep(1.2) 
+                    await asyncio.sleep(1.5) 
                     
                 except exceptions.RetryAfter as e:
                     print(f"Limit: {e.timeout} saniyə gözlənilir...")
@@ -46,9 +46,9 @@ async def start_typing():
                     return
                 except Exception as e:
                     print(f"Gözlənilməz xəta: {e}")
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(1.5)
 
-            await asyncio.sleep(1) # Cümlə bitəndə fasilə
+            await asyncio.sleep(1.5) # Cümlə bitəndə fasilə
 
 if __name__ == "__main__":
     asyncio.run(start_typing())
