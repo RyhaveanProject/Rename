@@ -38,7 +38,7 @@ async def start_typing():
                         message_id=MESSAGE_ID,
                         text=current_display
                     )
-                    await asyncio.sleep(0.8) # Sənin istədiyin sürət
+                    await asyncio.sleep(0.4) # Sənin istədiyin sürət
                 except Exception as e:
                     # Flood limitə düşəndə və ya eyni mətni göndərəndə xətanı keç
                     if "message is not modified" in str(e):
